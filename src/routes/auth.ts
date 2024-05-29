@@ -14,7 +14,6 @@ authRouter.options('/register', (req, res) => {
 
 authRouter.post('/register', async (req: any, res: any) => {
     const { username, email, password } = req.body;
-    console.log(req.body);
 
     const userRepository = AppDataSource.getRepository(User);
 
