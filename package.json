@@ -1,0 +1,43 @@
+{
+  "name": "microservices",
+  "version": "1.0.0",
+  "description": "Backend pour CES'Eat",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node app/server.ts",
+    "build": "tsc",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Projet-Web-Avance-A4/Microservices2.git"
+  },
+  "author": "CES'Eat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Projet-Web-Avance-A4/Microservices2/issues"
+  },
+  "homepage": "https://github.com/Projet-Web-Avance-A4/Microservices2#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^5.9.2",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
