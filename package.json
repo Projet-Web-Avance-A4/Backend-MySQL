@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Projet-Web-Avance-A4/Microservices2.git"
+    "url": "git+https://github.com/Projet-Web-Avance-A4/Microservices.git"
   },
   "author": "CES'Eat",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Projet-Web-Avance-A4/Microservices2/issues"
+    "url": "https://github.com/Projet-Web-Avance-A4/Microservices/issues"
   },
-  "homepage": "https://github.com/Projet-Web-Avance-A4/Microservices2#readme",
+  "homepage": "https://github.com/Projet-Web-Avance-A4/Microservices#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
