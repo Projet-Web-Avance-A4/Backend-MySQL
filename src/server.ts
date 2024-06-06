@@ -3,6 +3,7 @@ import { AppDataSource } from './config';
 import cors from 'cors';
 import http from 'http';
 import authRouter from './routes/auth';
+import logRouter from './routes/log'
 
 const app = express();
 
@@ -40,6 +41,7 @@ function createServer() {
 }
 
 AppDataSource.initialize().then(() => {
-    app.use('/api', authRouter);
+    app.use('/api/auth', authRouter);
+    app.use('/api/log', logRouter);
     createServer();
 }).catch(error => console.log(error));

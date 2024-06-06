@@ -148,6 +148,29 @@ authRouter.post('/login', async (req: any, res: any) => {
     const accessToken = generateAccessToken(dataUserToken);
     const refreshToken = generateRefreshToken(dataUserToken);
 
+    try {
+        const response = await fetch('http://localhost:3001/api/log/createLog', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id_user: existingUser.id_user,
+                name: `${existingUser.name} ${existingUser.surname}`,
+                mail: existingUser.mail,
+                role: existingUser.role,
+                type: 'Connexion',
+                timestamp: new Date().toISOString()
+            })
+        });
+
+        if (!response.ok) {
+            console.error('Failed to create log:', await response.text());
+        }
+    } catch (error) {
+        console.error('Failed to create log:', error);
+    }
+
     res.status(200).json({ accessToken, refreshToken });
 });
 
