@@ -6,12 +6,6 @@ import jwt from 'jsonwebtoken';
 
 const authRouter = Router();
 
-authRouter.options('/register', (req, res) => {
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.status(200).end();
-});
-
 authRouter.post('/register', async (req: any, res: any) => {
     const { name, surname, mail, password, role, phone, street, city, postalCode, status, code_referral, id_sponsor } = req.body;
 
@@ -64,6 +58,5 @@ authRouter.post('/login', async (req: any, res: any) => {
 
     res.status(200).json({ token });
 });
-
 
 export default authRouter;
