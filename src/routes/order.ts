@@ -1,29 +1,21 @@
-
 import { Router } from 'express';
-import { AppDataSource } from '../config';
-import { Order } from '../entities/order';
-import { Not, FindOptionsWhere } from 'typeorm';
+import { MongoClient } from 'mongodb';
 
 const orderRouter = Router();
 
-
 orderRouter.get('/getOrders', async (req: any, res: any) => {
-
-    const { MongoClient } = require('mongodb');
-
-    const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/CES'EAT";
+    const client = new MongoClient(uri);
 
     try {
         await client.connect();
         console.log("Connected to MongoDB");
 
-        const database = client.db("CES'EAT");
+        const database = client.db();
         const commandesCollection = database.collection("Commandes");
 
-        const orders = commandesCollection.find({  where: {
-            order_status: Not('delivered')
-          } }).toArray();
+        const orders = await commandesCollection.find().toArray();
+        console.log(orders);
         res.json(orders);
 
     } catch (e) {
