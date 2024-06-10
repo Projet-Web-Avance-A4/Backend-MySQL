@@ -5,6 +5,7 @@ import http from 'http';
 import authRouter from './routes/auth';
 import orderRouter from './routes/order';
 import clientRouter from './routes/user';
+import logRouter from './routes/log'
 
 const app = express();
 
@@ -45,5 +46,6 @@ AppDataSource.initialize().then(() => {
     app.use('/api/auth', authRouter);
     app.use('/api/order', orderRouter);
     app.use('/api/client', clientRouter);
+    app.use('/api/log', logRouter);
     createServer();
 }).catch(error => console.log(error));
