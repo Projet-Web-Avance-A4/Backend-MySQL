@@ -29,7 +29,7 @@ clientRouter.get('/articles', async (req: any, res: any) => {
 });
 
 clientRouter.post('/commandes', async (req: any, res: any) => {
-    const customer_id = req.body.customer_id; // Assurez-vous que req.body contient bien l'ID du client
+    const customer_id = req.body.customer_id;
     const { MongoClient } = require('mongodb');
 
     const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
@@ -53,7 +53,30 @@ clientRouter.post('/commandes', async (req: any, res: any) => {
 })
 
 clientRouter.post('/livraison', async (req: any, res: any) => {
-    
+    const customer_id = req.body.customer_id;
+    const { MongoClient } = require('mongodb');
+
+    const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    try {
+        await client.connect();
+
+        const database = client.db("CES'EAT");
+        const commandesCollection = database.collection("Commandes");
+
+        const commandInDelivery = await commandesCollection.findOne({
+            "customer.customer_id": customer_id,
+            "order_status": "in_progress"
+        });
+        res.json(commandInDelivery);
+
+    } catch (e) {
+        console.error('Error fetching command in delivery:', e);
+        res.status(500).json({ message: 'Internal Server Error' });
+    } finally {
+        await client.close();
+    }
 })
 
 export default clientRouter;
