@@ -8,13 +8,14 @@ import clientRouter from './routes/user';
 import logRouter from './routes/log'
 import notifRouter from './routes/notif'
 
+
 const app = express();
 
 app.use(express.json());
 
 app.use(cors({
     origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
