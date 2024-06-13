@@ -149,7 +149,7 @@ authRouter.post('/login', async (req: any, res: any) => {
     const refreshToken = generateRefreshToken(dataUserToken);
 
     try {
-        const response = await fetch('http://localhost:3001/api/log/createLog', {
+        const response = await fetch('http://localhost:4000/log/createLog', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
