@@ -228,6 +228,7 @@ authRouter.post('/update-password', async (req: any, res: any) => {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
+
     const passwordMatch = await bcrypt.compare(oldPassword, existingUser.password);
 
     if (passwordMatch) {

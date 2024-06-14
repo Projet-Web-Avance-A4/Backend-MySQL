@@ -15,7 +15,6 @@ orderRouter.get('/getOrders', async (req: any, res: any) => {
         const commandesCollection = database.collection("Commandes");
 
         const orders = await commandesCollection.find().toArray();
-        console.log(orders);
         res.json(orders);
 
     } catch (e) {

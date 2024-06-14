@@ -14,13 +14,13 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
+    origin: 'http://localhost:4000',
+    methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
-let port: number = parseInt(process.env.PORT || '3000', 10);
+let port: number = parseInt(process.env.PORT || '5000', 10);
 
 function createServer() {
     const server = http.createServer(app);
@@ -45,10 +45,10 @@ function createServer() {
 }
 
 AppDataSource.initialize().then(() => {
-    app.use('/api/auth', authRouter);
-    app.use('/api/order', orderRouter);
-    app.use('/api/client', clientRouter);
-    app.use('/api/log', logRouter);
-    app.use('/api/events', notifRouter);
+    app.use('/auth', authRouter);
+    app.use('/order', orderRouter);
+    app.use('/client', clientRouter);
+    app.use('/log', logRouter);
+    app.use('/events', notifRouter);
     createServer();
 }).catch(error => console.log(error));
