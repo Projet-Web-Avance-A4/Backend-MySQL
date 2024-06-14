@@ -6,9 +6,6 @@ export class Log {
     id!: number;
 
     @Column({ nullable: false })
-    id_user!: number;
-
-    @Column({ nullable: false })
     name!: string;
 
     @Column({ nullable: false })
