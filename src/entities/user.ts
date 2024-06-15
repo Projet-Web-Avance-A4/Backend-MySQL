@@ -38,6 +38,6 @@ export class User {
     @Column({ type: 'varchar', nullable: false })
     code_referral!: string;
 
-    @Column({ type: 'integer', nullable: false })
+    @Column({ type: 'integer', nullable: true })
     id_sponsor?: number;
 }
