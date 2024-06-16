@@ -8,18 +8,18 @@ const clientRouter = Router();
 clientRouter.post('/getClient', async (req: any, res: any) => {
 
     try {
-        const {userId} = req.body; // Récupère l'ID utilisateur depuis la requête
+        const {userId} = req.body;
         if (userId) {
             const userRepository = AppDataSource.getRepository(User);
             const existingUser = await userRepository.findOne({ where: { id_user: parseInt(userId) } });
 
             if (existingUser) {
-                res.status(200).json(existingUser); // Retourne les informations de l'utilisateur trouvé
+                res.status(200).json(existingUser); 
             } else {
-                res.status(404).json({ message: 'Utilisateur non trouvé' }); // Si aucun utilisateur correspondant n'est trouvé
+                res.status(404).json({ message: 'Utilisateur non trouvé' }); 
             }
         } else {
-            res.status(400).json({ message: 'ID utilisateur non fourni dans la requête' }); // Si l'ID utilisateur n'est pas fourni dans la requête
+            res.status(400).json({ message: 'ID utilisateur non fourni dans la requête' });
         }
     } catch (error) {
         console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
@@ -55,5 +55,31 @@ clientRouter.post('/deleteClient', async (req: any, res: any) => {
 
     res.status(200).json('Le compte a bien été supprimé');
 });
+
+clientRouter.post('/updateStatus', async (req: any, res: any) => {
+    const { userId, status } = req.body;
+  
+    const newStatus = status === 'Inactive' ? 'Active' : 'Inactive';
+  
+    const userRepository = AppDataSource.getRepository(User);
+  
+    try {
+      const user = await userRepository.findOneBy({ id_user: parseInt(userId) });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      }
+  
+      user.status = newStatus;
+      await userRepository.save(user);
+  
+      return res.status(200).json({ message: 'Statut mis à jour avec succès' });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut :', error);
+      return res.status(500).json({ message: 'Erreur lors de la mise à jour du statut' });
+    }
+  });
+  
+  
 
 export default clientRouter;
