@@ -9,14 +9,12 @@ orderRouter.get('/getOrders', async (req: any, res: any) => {
     const client = new MongoClient(uri);
     try {
         await client.connect();
-        // console.log("Connected to MongoDB");
 
         const database = client.db();
         const commandesCollection = database.collection("Commandes");
 
         const orders = await commandesCollection.find().toArray();
         res.json(orders);
-
     } catch (e) {
         console.error('Error fetching commandes:', e);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -31,7 +29,6 @@ orderRouter.post('/assignDeliveryman', async (req: any, res: any) => {
 
     try {
         await client.connect();
-        // console.log("Connected to MongoDB");
 
         const database = client.db();
         const commandesCollection = database.collection("Commandes");
@@ -48,6 +45,7 @@ orderRouter.post('/assignDeliveryman', async (req: any, res: any) => {
                 }
             }
         )
+        res.status(200).json({ message: 'Assignation du livreur réussite' });
     } catch (e) {
         console.error('Error fetching commandes:', e);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -62,13 +60,11 @@ orderRouter.post('/updateOrderStatus', async (req: any, res: any) => {
     
     try {
         await client.connect();
-        // console.log("Connected to MongoDB");
 
         const database = client.db();
         const commandesCollection = database.collection("Commandes");
 
         const { idOrder, newStatus } = req.body;
-        console.log(idOrder, newStatus)
 
         await commandesCollection.updateOne(
             { order_id: idOrder },
@@ -78,6 +74,7 @@ orderRouter.post('/updateOrderStatus', async (req: any, res: any) => {
                 }
             }
         )
+        res.status(200).json({ message: 'Mise à jour du status de la commande réussite' });
     } catch (e) {
         console.error('Error fetching commandes:', e);
         res.status(500).json({ message: 'Internal Server Error' });
