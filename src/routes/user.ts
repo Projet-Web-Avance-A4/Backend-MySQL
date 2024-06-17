@@ -79,6 +79,30 @@ clientRouter.post('/updateStatus', async (req: any, res: any) => {
       return res.status(500).json({ message: 'Erreur lors de la mise à jour du statut' });
     }
   });
+
+  clientRouter.post('/updateClient', async (req: any, res: any) => {
+
+    const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
+
+    const userRepository = AppDataSource.getRepository(User);
+
+    const existingUser = await userRepository.findOne({ where: { mail: currentMail } });
+    if (!existingUser) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    existingUser.name = name;
+    existingUser.surname = surname;
+    existingUser.mail = newMail;
+    existingUser.phone = phone;
+    existingUser.street = street;
+    existingUser.city = city;
+    existingUser.postal_code = postalCode;
+
+    await userRepository.save(existingUser);
+
+    res.status(200).json({ message: 'Données modifiées' });
+});
   
   
 

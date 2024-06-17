@@ -29,6 +29,7 @@ function generateRefreshToken(user: any) {
 
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
+
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -160,6 +161,7 @@ authRouter.post('/login', async (req: any, res: any) => {
 });
 
 authRouter.post('/update', authenticateJWT, async (req: any, res: any) => {
+
     const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
