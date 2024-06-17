@@ -29,7 +29,8 @@ function generateRefreshToken(user: any) {
 
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
-    const token = req.cookies.accessToken;
+
+    const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ message: 'Non authentifié' });
@@ -50,22 +51,6 @@ function authenticateJWT(req: Request, res: Response, next: NextFunction) {
         next();
     });
 }
-
-authRouter.get('/user', authenticateJWT, async (req: Request, res: Response) => {
-    try {
-        const user = req.user?.userId;
-
-        if (user) {
-            const userRepository = AppDataSource.getRepository(User);
-            const existingUser = await userRepository.findOne({ where: { id_user: parseInt(user) } });
-            res.status(200).json({ existingUser });
-
-        }
-    } catch (error) {
-        console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
-        res.status(500).json({ message: 'Erreur serveur lors de la récupération des informations de l\'utilisateur' });
-    }
-});
 
 authRouter.post('/register', async (req: Request, res: Response) => {
     const { name, surname, mail, password, role, phone, street, city, postalCode, status, code_referral, id_sponsor } = req.body;
@@ -150,7 +135,7 @@ authRouter.post('/login', async (req: any, res: any) => {
     const refreshToken = generateRefreshToken(dataUserToken);
 
     try {
-        const response = await fetch('http://localhost:3001/api/log/createLog', {
+        const response = await fetch('http://localhost:4000/log/createLog', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -175,7 +160,8 @@ authRouter.post('/login', async (req: any, res: any) => {
     res.status(200).json({ accessToken, refreshToken });
 });
 
-authRouter.post('/update', async (req: any, res: any) => {
+authRouter.post('/update', authenticateJWT, async (req: any, res: any) => {
+
     const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
@@ -213,7 +199,7 @@ authRouter.post('/update', async (req: any, res: any) => {
     const accessToken = generateAccessToken(dataUserToken);
     const refreshToken = generateRefreshToken(dataUserToken);
 
-    res.status(200).json({ accessToken, refreshToken });
+    res.status(200).json({ accessToken, refreshToken, message: 'OK' });
 });
 
 authRouter.post('/update-password', async (req: any, res: any) => {
@@ -228,6 +214,7 @@ authRouter.post('/update-password', async (req: any, res: any) => {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
+
     const passwordMatch = await bcrypt.compare(oldPassword, existingUser.password);
 
     if (passwordMatch) {
@@ -239,7 +226,7 @@ authRouter.post('/update-password', async (req: any, res: any) => {
     }
 });
 
-authRouter.post('/delete', async (req: any, res: any) => {
+authRouter.post('/delete', authenticateJWT, async (req: any, res: any) => {
     const { mail, password } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);

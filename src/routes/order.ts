@@ -14,7 +14,8 @@ orderRouter.get('/getOrders', async (req: any, res: any) => {
         const database = client.db();
         const commandesCollection = database.collection("Commandes");
 
-        const orders = await commandesCollection.find().toArray(); res.json(orders);
+        const orders = await commandesCollection.find().toArray();
+        res.json(orders);
 
     } catch (e) {
         console.error('Error fetching commandes:', e);

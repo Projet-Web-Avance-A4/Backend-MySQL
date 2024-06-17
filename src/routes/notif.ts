@@ -16,7 +16,7 @@ const db = mysql.createConnection({
 });
 
 // Connecter à la base de données MySQL
-db.connect(err => {
+db.connect((err: any) => {
     if (err) {
         throw err;
     }
@@ -31,7 +31,7 @@ app.get('/events', (req, res) => {
 
     // Intervalle pour vérifier les nouvelles notifications
     const intervalId = setInterval(() => {
-        db.query('SELECT * FROM notifications ORDER BY created_at DESC LIMIT 1', (err, result) => {
+        db.query('SELECT * FROM notifications ORDER BY created_at DESC LIMIT 1', (err: any, result: any) => {
             if (err) {
                 console.error(err);
                 return;
@@ -41,7 +41,7 @@ app.get('/events', (req, res) => {
                 res.write(`data: ${JSON.stringify({ message: notification.message })}\n\n`);
 
                 // Supprimer la notification après l'avoir envoyée
-                db.query('DELETE FROM notifications WHERE id = ?', [notification.id], (err, result) => {
+                db.query('DELETE FROM notifications WHERE id = ?', [notification.id], (err: any, result: any) => {
                     if (err) {
                         console.error(err);
                     }
