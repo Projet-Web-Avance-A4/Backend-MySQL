@@ -7,6 +7,7 @@ import orderRouter from './routes/order';
 import clientRouter from './routes/user';
 import logRouter from './routes/log'
 import notifRouter from './routes/notif'
+import menuRouter from './routes/menu';
 
 
 const app = express();
@@ -50,6 +51,7 @@ AppDataSource.initialize().then(() => {
     app.use('/client', clientRouter);
     app.use('/log', logRouter);
     app.use('/events', notifRouter);
+    app.use('/menus', menuRouter);
 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err.stack);
