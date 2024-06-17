@@ -5,39 +5,39 @@ export class User {
     @PrimaryGeneratedColumn()
     id_user!: number;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     name!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     surname!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     mail!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     password!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     role!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     phone!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     street!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     city!: string;
 
-    @Column({ nullable: false })
+    @Column('integer', { nullable: false })
     postal_code!: number;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     status!: string;
 
-    @Column({ nullable: false })
+    @Column('varchar', { nullable: false })
     code_referral!: string;
 
-    @Column({ nullable: true })
+    @Column('integer', { nullable: true })
     id_sponsor?: number;
 }

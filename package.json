@@ -2,7 +2,7 @@
   "name": "microservices",
   "version": "1.0.0",
   "description": "Backend pour CES'Eat",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "start": "ts-node app/server.ts",
     "build": "tsc",
@@ -26,7 +26,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.9.2",
-    "mysql": "^2.18.1",
+    "mysql2": "^3.10.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20"
   },
@@ -38,6 +38,7 @@
     "@types/node": "^20.12.12",
     "nodemon": "^3.1.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.15.4",
     "typescript": "^5.4.5"
   }
 }

@@ -4,7 +4,7 @@ import { Log } from './entities/log';
 
 export const AppDataSource = new DataSource({
     type: 'mysql',
-    host: 'localhost',
+    host: 'ceseat-bddr',
     port: 3306,
     username: 'root',
     password: "password",
