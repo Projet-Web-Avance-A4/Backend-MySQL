@@ -3,7 +3,11 @@ import { AppDataSource } from './config';
 import cors from 'cors';
 import http from 'http';
 import authRouter from './routes/auth';
+import orderRouter from './routes/order';
+import clientRouter from './routes/user';
 import logRouter from './routes/log'
+import notifRouter from './routes/notif'
+
 
 const app = express();
 
@@ -42,7 +46,10 @@ function createServer() {
 
 AppDataSource.initialize().then(() => {
     app.use('/auth', authRouter);
+    app.use('/order', orderRouter);
+    app.use('/client', clientRouter);
     app.use('/log', logRouter);
+    app.use('/events', notifRouter);
 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err.stack);

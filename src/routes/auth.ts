@@ -1,3 +1,4 @@
+
 import { Router, Request, Response, NextFunction } from 'express';
 import { AppDataSource } from '../config';
 import { User } from '../entities/user';
@@ -28,6 +29,7 @@ function generateRefreshToken(user: any) {
 
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
+
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -159,6 +161,7 @@ authRouter.post('/login', async (req: any, res: any) => {
 });
 
 authRouter.post('/update', authenticateJWT, async (req: any, res: any) => {
+
     const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
@@ -210,6 +213,7 @@ authRouter.post('/update-password', async (req: any, res: any) => {
     if (!existingUser) {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
+
 
     const passwordMatch = await bcrypt.compare(oldPassword, existingUser.password);
 
