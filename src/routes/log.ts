@@ -5,13 +5,12 @@ import { Log } from '../entities/log';
 const logRouter = Router();
 
 logRouter.post('/createLog', async (req, res) => {
-    const { id_user, name, mail, role, type, timestamp } = req.body;
+    const { name, mail, role, type, timestamp } = req.body;
 
     try {
         const logRepository = AppDataSource.getRepository(Log);
 
         const newLog = new Log();
-        newLog.id_user = id_user;
         newLog.name = name;
         newLog.mail = mail;
         newLog.role = role;

@@ -50,5 +50,15 @@ AppDataSource.initialize().then(() => {
     app.use('/client', clientRouter);
     app.use('/log', logRouter);
     app.use('/events', notifRouter);
+
+    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        console.error(err.stack);
+        res.status(500).send('Erreur côté serveur');
+    });
+
+    app.use((req: express.Request, res: express.Response) => {
+        res.status(404).send('Impossible de trouver');
+    });
+
     createServer();
 }).catch(error => console.log(error));
