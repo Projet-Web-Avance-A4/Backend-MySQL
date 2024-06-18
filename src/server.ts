@@ -6,11 +6,11 @@ import authRouter from './routes/auth';
 import clientRouter from './routes/user';
 import logRouter from './routes/log'
 import notifRouter from './routes/notif'
-
+import helmet from 'helmet';
 
 const app = express();
-
 app.use(express.json());
+app.use(helmet());
 
 app.use(cors({
     origin: 'http://localhost:4000',
