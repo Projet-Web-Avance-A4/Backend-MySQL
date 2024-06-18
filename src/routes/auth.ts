@@ -1,4 +1,3 @@
-
 import { Router, Request, Response, NextFunction } from 'express';
 import { AppDataSource } from '../config';
 import { User } from '../entities/user';
@@ -26,7 +25,6 @@ function generateAccessToken(user: any) {
 function generateRefreshToken(user: any) {
     return jwt.sign(user, 'refresh_secret_jwt', { expiresIn: '7d' });
 }
-
 
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
 
@@ -99,9 +97,8 @@ authRouter.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-
 authRouter.post('/login', async (req: any, res: any) => {
-    const { mail, password } = req.body;
+    const { mail, password, appRole } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
 
@@ -110,11 +107,14 @@ authRouter.post('/login', async (req: any, res: any) => {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
+    if (appRole !== existingUser.role) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' })
+    }
+
     const passwordMatch = await bcrypt.compare(password, existingUser.password);
     if (!passwordMatch) {
         return res.status(401).json({ message: 'Mot de passe incorrect' });
     }
-
 
     const dataUserToken = {
         userId: existingUser.id_user,
