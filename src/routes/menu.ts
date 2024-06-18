@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import { AppDataSource } from '../config';
 import { Menu } from '../entities/menu';
