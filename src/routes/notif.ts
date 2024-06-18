@@ -39,7 +39,7 @@ app.get('/events', (req, res) => {
 
                 // Insert into MongoDB
                 try {
-                    const response = await fetch('http://localhost:4040/notifications', {
+                    const response = await fetch('http://localhost:5040/notifications', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ app.get('/events', (req, res) => {
     });
 });
 
-const PORT = 3030;
+const PORT = 5030;
 app.listen(PORT, () => {
     console.log(`MySQL Server is running on port ${PORT}`);
 });
