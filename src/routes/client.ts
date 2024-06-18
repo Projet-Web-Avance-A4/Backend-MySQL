@@ -1,82 +1,109 @@
+
 import { Router } from 'express';
 import { AppDataSource } from '../config';
 import { User } from '../entities/user';
-import { Menu } from '../entities/menu';
-import { Article } from '../entities/article';
 
 const clientRouter = Router();
 
-clientRouter.get('/menus', async (req: any, res: any) => {
+clientRouter.post('/getClient', async (req: any, res: any) => {
+
     try {
-        const menuRepository = AppDataSource.getRepository(Menu);
-        const menuList = await menuRepository.find();
-        res.json(menuList);
-    } catch (e) {
-        console.error('Error fetching menus:', e);
-        res.status(500).json({ message: 'Internal Server Error' });
+        const {userId} = req.body;
+        if (userId) {
+            const userRepository = AppDataSource.getRepository(User);
+            const existingUser = await userRepository.findOne({ where: { id_user: parseInt(userId) } });
+
+            if (existingUser) {
+                res.status(200).json(existingUser); 
+            } else {
+                res.status(404).json({ message: 'Utilisateur non trouvé' }); 
+            }
+        } else {
+            res.status(400).json({ message: 'ID utilisateur non fourni dans la requête' });
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur serveur lors de la récupération des informations de l\'utilisateur' });
     }
 });
 
-clientRouter.get('/articles', async (req: any, res: any) => {
-    try {
-        const articleRepository = AppDataSource.getRepository(Article);
-        const articleList = await articleRepository.find();
-        res.json(articleList);
-    } catch (e) {
-        console.error('Error fetching articles:', e);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
+clientRouter.get('/getClients', async (req: any, res: any) => {
+
+    const userRepository = AppDataSource.getRepository(User);
+
+    const users = await userRepository.find();
+    
+
+    res.status(200).json(users);
 });
 
-clientRouter.post('/commandes', async (req: any, res: any) => {
-    const customer_id = req.body.customer_id;
-    const { MongoClient } = require('mongodb');
 
-    const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+clientRouter.post('/deleteClient', async (req: any, res: any) => {
 
-    try {
-        await client.connect();
 
-        const database = client.db("CES'EAT");
-        const commandesCollection = database.collection("Commandes");
+    const {itemId} = req.body;
+    const userRepository = AppDataSource.getRepository(User);
 
-        const commandesListe = await commandesCollection.find({ "customer.customer_id": customer_id }).toArray(); // Utilisez toArray() pour obtenir les documents sous forme de tableau
-        res.json(commandesListe);
-
-    } catch (e) {
-        console.error('Error fetching commandes:', e);
-        res.status(500).json({ message: 'Internal Server Error' });
-    } finally {
-        await client.close();
+    const user = await userRepository.findOneBy({ id_user: parseInt(itemId) });
+    if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
-})
 
-clientRouter.post('/livraison', async (req: any, res: any) => {
-    const customer_id = req.body.customer_id;
-    const { MongoClient } = require('mongodb');
+    user.status = "Deleted";
 
-    const uri = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await userRepository.save(user);
 
+    res.status(200).json('Le compte a bien été supprimé');
+});
+
+clientRouter.post('/updateStatus', async (req: any, res: any) => {
+    const { userId, status } = req.body;
+  
+    const newStatus = status === 'Inactive' ? 'Active' : 'Inactive';
+  
+    const userRepository = AppDataSource.getRepository(User);
+  
     try {
-        await client.connect();
-
-        const database = client.db("CES'EAT");
-        const commandesCollection = database.collection("Commandes");
-
-        const commandInDelivery = await commandesCollection.findOne({
-            "customer.customer_id": customer_id,
-            "order_status": "in_progress"
-        });
-        res.json(commandInDelivery);
-
-    } catch (e) {
-        console.error('Error fetching command in delivery:', e);
-        res.status(500).json({ message: 'Internal Server Error' });
-    } finally {
-        await client.close();
+      const user = await userRepository.findOneBy({ id_user: parseInt(userId) });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      }
+  
+      user.status = newStatus;
+      await userRepository.save(user);
+  
+      return res.status(200).json({ message: 'Statut mis à jour avec succès' });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut :', error);
+      return res.status(500).json({ message: 'Erreur lors de la mise à jour du statut' });
     }
-})
+  });
+
+  clientRouter.post('/updateClient', async (req: any, res: any) => {
+
+    const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
+
+    const userRepository = AppDataSource.getRepository(User);
+
+    const existingUser = await userRepository.findOne({ where: { mail: currentMail } });
+    if (!existingUser) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    existingUser.name = name;
+    existingUser.surname = surname;
+    existingUser.mail = newMail;
+    existingUser.phone = phone;
+    existingUser.street = street;
+    existingUser.city = city;
+    existingUser.postal_code = postalCode;
+
+    await userRepository.save(existingUser);
+
+    res.status(200).json({ message: 'Données modifiées' });
+});
+  
+  
 
 export default clientRouter;
