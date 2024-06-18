@@ -1,71 +1,9 @@
-/* import express from 'express';
-import cors from 'cors';
-import mysql from 'mysql';
-import { Router, Request, Response, NextFunction } from 'express';
-
-const notifRouter = Router();
-const app = express();
-app.use(cors());
-
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'ceseat'
-});
-
-db.connect((err: any) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connecté à la base de données MySQL');
-});
-
-app.get('/events', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-
-    const intervalId = setInterval(() => {
-        db.query('SELECT * FROM notifications ORDER BY created_at DESC LIMIT 1', (err: any, result: any) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            if (result.length > 0) {
-                const notification = result[0];
-                res.write(`data: ${JSON.stringify({ message: notification.message })}\n\n`);
-
-                db.query('DELETE FROM notifications WHERE id = ?', [notification.id], (err: any, result: any) => {
-                    if (err) {
-                        console.error(err);
-                    }
-                });
-            }
-        });
-    }, 10000); 
-
-    req.on('close', () => {
-        clearInterval(intervalId);
-    });
-});
-
-const PORT = 3030;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-export default notifRouter;
- */
+// mysqlBackend.ts
 
 import express from 'express';
 import cors from 'cors';
 import mysql from 'mysql';
-import { MongoClient } from 'mongodb';
 
-import { Router, Request, Response, NextFunction } from 'express';
-
-const notifRouter = Router();
 const app = express();
 app.use(cors());
 
@@ -77,30 +15,12 @@ const db = mysql.createConnection({
     database: 'ceseat'
 });
 
-db.connect((err: any) => {
+db.connect((err) => {
     if (err) {
         throw err;
     }
     console.log('Connecté à la base de données MySQL');
 });
-
-// Connexion MongoDB
-const mongoUrl = "mongodb+srv://admin:adminces'eat@ceseat.rkfov9n.mongodb.net/";
-const dbName = "CES'EAT";
-let mongoClient: MongoClient;
-let notificationsCollection: any;
-
-MongoClient.connect(mongoUrl)
-    .then(client => {
-        console.log('Connecté à la base de données MongoDB');
-        mongoClient = client;
-        const db = mongoClient.db(dbName);
-        notificationsCollection = db.collection('Notifications');
-    })
-    .catch(err => {
-        console.error('Erreur de connexion à MongoDB:', err);
-        process.exit(1);
-    });
 
 app.get('/events', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -108,7 +28,7 @@ app.get('/events', (req, res) => {
     res.setHeader('Connection', 'keep-alive');
 
     const intervalId = setInterval(() => {
-        db.query('SELECT * FROM Notification_buffer ORDER BY created_at DESC LIMIT 1', async (err: any, result: any) => {
+        db.query('SELECT * FROM Notification_buffer ORDER BY created_at DESC LIMIT 1', async (err, result) => {
             if (err) {
                 console.error(err);
                 return;
@@ -119,13 +39,23 @@ app.get('/events', (req, res) => {
 
                 // Insert into MongoDB
                 try {
-                    await notificationsCollection.insertOne({
-                        message: notification.message,
-                        created_at: new Date(notification.created_at)
+                    const response = await fetch('http://localhost:4040/notifications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: notification.message,
+                            created_at: notification.created_at
+                        })
                     });
 
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de l'insertion de la notification dans MongoDB: ${response.statusText}`);
+                    }
+
                     // Delete from MySQL buffer
-                    db.query('DELETE FROM Notification_buffer WHERE id = ?', [notification.id], (err: any) => {
+                    db.query('DELETE FROM Notification_buffer WHERE id = ?', [notification.id], (err) => {
                         if (err) {
                             console.error(err);
                         }
@@ -144,7 +74,7 @@ app.get('/events', (req, res) => {
 
 const PORT = 3030;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`MySQL Server is running on port ${PORT}`);
 });
 
-export default notifRouter;
+export default app;
