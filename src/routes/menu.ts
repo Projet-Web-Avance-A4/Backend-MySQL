@@ -50,4 +50,17 @@ menuRouter.post('/updateMenu', async (req: any, res: any) => {
     return res.status(200).json({ message: "Mise à jour du menu réussie" });
 });
 
+menuRouter.post('/deleteMenu', async (req: any, res: any) => {
+
+    const { id_menu } = req.body;
+
+    const menuRepository = AppDataSource.getRepository(Menu);
+    const menu = await menuRepository.findOne({ where: { id_menu: id_menu }});
+
+    await menuRepository.remove(menu!);
+
+    return res.status(200).json({ message: "Suppression du menu réussie" });
+});
+
+
 export default menuRouter;
