@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { User } from './entities/user';
 import { Log } from './entities/log';
-import { Menu } from './entities/menu';
-import { Article } from './entities/article';
+import { Menu } from './entities/menu'
+import { Article } from './entities/article'
 
 export const AppDataSource = new DataSource({
     type: 'mysql',

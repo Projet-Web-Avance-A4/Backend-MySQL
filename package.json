@@ -29,6 +29,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.9.2",
     "mysql": "^2.18.1",
+    "node-fetch": "^3.3.2",
+    "mysql2": "^3.10.1",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.7.5",
     "sse": "^0.0.8",

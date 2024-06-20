@@ -3,10 +3,11 @@ import { AppDataSource } from './config';
 import cors from 'cors';
 import http from 'http';
 import authRouter from './routes/auth';
-import orderRouter from './routes/order';
 import clientRouter from './routes/client';
 import logRouter from './routes/log'
 import notifRouter from './routes/notif'
+import menuRouter from './routes/menu';
+import articleRouter from './routes/article';
 import helmet from 'helmet';
 import productRouter from './routes/product';
 import dotenv from 'dotenv'
@@ -50,11 +51,12 @@ function createServer() {
 
 AppDataSource.initialize().then(() => {
     app.use('/auth', authRouter);
-    app.use('/order', orderRouter);
     app.use('/client', clientRouter);
     app.use('/log', logRouter);
     app.use('/events', notifRouter);
     app.use('/product', productRouter);
+    app.use('/menu', menuRouter);
+    app.use('/article', articleRouter);
 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err.stack);
