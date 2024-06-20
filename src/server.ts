@@ -6,6 +6,8 @@ import authRouter from './routes/auth';
 import clientRouter from './routes/user';
 import logRouter from './routes/log'
 import notifRouter from './routes/notif'
+import menuRouter from './routes/menu';
+import articleRouter from './routes/article';
 import helmet from 'helmet';
 
 const app = express();
@@ -48,6 +50,8 @@ AppDataSource.initialize().then(() => {
     app.use('/client', clientRouter);
     app.use('/log', logRouter);
     app.use('/events', notifRouter);
+    app.use('/menu', menuRouter);
+    app.use('/article', articleRouter);
 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err.stack);
