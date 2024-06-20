@@ -5,16 +5,16 @@ export class Log {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column('varchar', { nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     name!: string;
 
-    @Column('varchar', { nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     mail!: string;
 
-    @Column('varchar', { nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     role!: string;
 
-    @Column('varchar', { nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     type!: string;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', nullable: false })

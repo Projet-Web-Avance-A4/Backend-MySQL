@@ -6,6 +6,9 @@ import jwt from 'jsonwebtoken';
 
 const authRouter = Router();
 
+const backendMySQLPort = process.env.PORT || 5000;
+const host = process.env.HOST || 'localhost';
+
 interface jwtUser {
     userId: string;
 }
@@ -26,8 +29,8 @@ function generateRefreshToken(user: any) {
     return jwt.sign(user, 'refresh_secret_jwt', { expiresIn: '7d' });
 }
 
-
 function authenticateJWT(req: Request, res: Response, next: NextFunction) {
+
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -97,9 +100,8 @@ authRouter.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-
 authRouter.post('/login', async (req: any, res: any) => {
-    const { mail, password } = req.body;
+    const { mail, password, appRole } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
 
@@ -108,11 +110,14 @@ authRouter.post('/login', async (req: any, res: any) => {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
+    if (appRole !== existingUser.role) {
+        return res.status(404).json({ message: 'Utilisateur non trouvé' })
+    }
+
     const passwordMatch = await bcrypt.compare(password, existingUser.password);
     if (!passwordMatch) {
         return res.status(401).json({ message: 'Mot de passe incorrect' });
     }
-
 
     const dataUserToken = {
         userId: existingUser.id_user,
@@ -133,7 +138,7 @@ authRouter.post('/login', async (req: any, res: any) => {
     const refreshToken = generateRefreshToken(dataUserToken);
 
     try {
-        const response = await fetch('http://localhost:4000/log/createLog', {
+        const response = await fetch(`http://${host}:${backendMySQLPort}/log/createLog`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -159,6 +164,7 @@ authRouter.post('/login', async (req: any, res: any) => {
 });
 
 authRouter.post('/update', authenticateJWT, async (req: any, res: any) => {
+
     const { name, surname, currentMail, newMail, phone, street, city, postalCode } = req.body;
 
     const userRepository = AppDataSource.getRepository(User);
@@ -210,6 +216,7 @@ authRouter.post('/update-password', async (req: any, res: any) => {
     if (!existingUser) {
         return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
+
 
     const passwordMatch = await bcrypt.compare(oldPassword, existingUser.password);
 

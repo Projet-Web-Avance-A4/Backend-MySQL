@@ -4,18 +4,22 @@ import { AppDataSource } from './config';
 import cors from 'cors';
 import http from 'http';
 import authRouter from './routes/auth';
+import orderRouter from './routes/order';
+import clientRouter from './routes/user';
 import logRouter from './routes/log'
+import notifRouter from './routes/notif'
+import helmet from 'helmet';
 
 const app = express();
-
 app.use(express.json());
+app.use(helmet());
 
-app.use(cors({
+/* app.use(cors({
     origin: 'http://localhost:4000',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
-}));
+})); */
 
 let port: number = parseInt(process.env.PORT || '5000', 10);
 
@@ -43,7 +47,10 @@ function createServer() {
 
 AppDataSource.initialize().then(() => {
     app.use('/auth', authRouter);
+    app.use('/order', orderRouter);
+    app.use('/client', clientRouter);
     app.use('/log', logRouter);
+    /* app.use('/events', notifRouter); */
 
     app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
         console.error(err.stack);
