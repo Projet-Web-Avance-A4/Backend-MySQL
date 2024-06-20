@@ -8,10 +8,11 @@ import logRouter from './routes/log'
 import notifRouter from './routes/notif'
 import menuRouter from './routes/menu';
 import articleRouter from './routes/article';
+import helmet from 'helmet';
 
 const app = express();
-
 app.use(express.json());
+app.use(helmet());
 
 app.use(cors({
     origin: 'http://localhost:4000',
