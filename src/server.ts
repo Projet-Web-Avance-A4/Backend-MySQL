@@ -3,37 +3,37 @@ import { AppDataSource } from './config';
 import cors from 'cors';
 import http from 'http';
 import authRouter from './routes/auth';
+import clientRouter from './routes/client';
+import logRouter from './routes/log'
+import notifRouter from './routes/notif'
+import menuRouter from './routes/menu';
+import articleRouter from './routes/article';
+import helmet from 'helmet';
+import productRouter from './routes/product';
+import dotenv from 'dotenv'
 
-// Initialisation de l'application Express
+dotenv.config();
+
 const app = express();
-
-// Middleware pour analyser les données des requêtes
 app.use(express.json());
+app.use(helmet());
 
-// Middleware pour gérer les requêtes cross-origin
 app.use(cors({
-    origin: 'http://localhost:3000', // Autoriser les requêtes provenant de cette origine
-    methods: ['GET', 'POST'], // Autoriser les méthodes GET et POST
-    allowedHeaders: ['Content-Type', 'Authorization'] // Autoriser les en-têtes Content-Type et Authorization
+    origin: 'http://localhost:4000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
-// Routes API par défaut
-app.get('/', (req, res) => {
-    res.send('Welcome to the backend API!');
-});
+let port: number = parseInt(process.env.PORT || '5000', 10);
 
-let port: number = parseInt(process.env.PORT || '3000', 10);
-
-// Fonction pour créer le serveur
 function createServer() {
     const server = http.createServer(app);
 
-    // Écouter sur le port actuel
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
 
-    // Gérer les erreurs
     server.on('error', (error: any) => {
         if (error.syscall !== 'listen') {
             throw error;
@@ -49,8 +49,23 @@ function createServer() {
     });
 }
 
-// Initialiser la connexion à la base de données et démarrer le serveur
 AppDataSource.initialize().then(() => {
-    app.use('/api', authRouter);
+    app.use('/auth', authRouter);
+    app.use('/client', clientRouter);
+    app.use('/log', logRouter);
+    app.use('/events', notifRouter);
+    app.use('/product', productRouter);
+    app.use('/menu', menuRouter);
+    app.use('/article', articleRouter);
+
+    app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+        console.error(err.stack);
+        res.status(500).send('Erreur côté serveur');
+    });
+
+    app.use((req: express.Request, res: express.Response) => {
+        res.status(404).send('Impossible de trouver');
+    });
+
     createServer();
 }).catch(error => console.log(error));
