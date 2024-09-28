@@ -5,18 +5,18 @@ export class Menu {
     @PrimaryGeneratedColumn()
     id_menu!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     price_menu!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     name_menu!: string;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     id_dish!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     category!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     id_restorer!: number;
 }

@@ -5,15 +5,15 @@ export class Article {
     @PrimaryGeneratedColumn()
     id_article!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     name_article!: string;
 
-    @Column({ nullable: false })
+    @Column({ type: 'varchar', nullable: false })
     category_article!: string;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     price_article!: number;
 
-    @Column({ nullable: false })
+    @Column({ type: 'integer', nullable: false })
     id_restorer!: number;
 }

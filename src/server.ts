@@ -6,7 +6,7 @@ import http from 'http';
 import authRouter from './routes/auth';
 import clientRouter from './routes/client';
 import logRouter from './routes/log'
-import notifRouter from './routes/notif'
+/* import notifRouter from './routes/notif' */
 import menuRouter from './routes/menu';
 import articleRouter from './routes/article';
 import helmet from 'helmet';
@@ -54,7 +54,7 @@ AppDataSource.initialize().then(() => {
     app.use('/auth', authRouter);
     app.use('/client', clientRouter);
     app.use('/log', logRouter);
-    app.use('/events', notifRouter);
+    /* app.use('/events', notifRouter); */
     app.use('/product', productRouter);
     app.use('/menu', menuRouter);
     app.use('/article', articleRouter);
